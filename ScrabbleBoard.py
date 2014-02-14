@@ -32,7 +32,12 @@ letterScores = {"TL": [(0, 6), (0, 8), (6, 0), (8, 0), (3, 3), (3, 11),
                        (4, 6), (4, 8), (6, 4), (8, 4), (10, 12), (12, 10),
                        (12, 13), (13, 12), (6, 10), (10, 6), (8, 10), (10, 8)]
                 }
+#This looks for a scrabble dictionary called 'sd' in the current directory
 gfile = open('sd').read()
+
+#We have a scrabble board with word and letter bonuses, and the method
+#to add a word to the board.
+#The board is displayed using brackets and letters
 class ScrabbleBoard(object):
 
     class boardSquare(object):
@@ -82,6 +87,7 @@ class ScrabbleBoard(object):
                 self.board[x][y].wordScore = None
                 x += 1
 
+#What it says on the tin
 def createBlankBoard():
     board = []
     for a in range(0, 15):
@@ -91,6 +97,7 @@ def createBlankBoard():
         board.append(row)
     return board
 
+#Add the coordinates of the word and letter bonuses
 def updateWS(board, wordScoreDict):
     for score in wordScoreDict.keys():
         indices = wordScoreDict[score]
@@ -164,6 +171,7 @@ def posPoints(word, board, x, y, hor):
                 newX += 1
     return current
 
+#A word can't be added along a line that is isolated from any letters
 def emptyLine(board, line):
     if line > 13:
         above = 14
@@ -178,7 +186,10 @@ def emptyLine(board, line):
     for i in range(0, 15):
         if board.board[line][i].letter != None or board.board[above][i].letter != None or board.board[below][i].letter != None:
             return False
-    return True        
+    return True    
+
+#Helper function to flip the board turnways
+#to check horizontal and vertical words    
 def transBoard(board):
     newBoard = ScrabbleBoard(wordScores,letterScores)
     for i in range(15):
@@ -194,6 +205,9 @@ def findWord(word):
             found += 1
             break
     return found > 0
+
+#Regexes cast a pretty wide net so we need to
+#make sure the word we found can really work
 def validWord(board, word, x, y, hor):
     f = gfile.splitlines()
     l = list(word)
@@ -252,6 +266,10 @@ def validWord(board, word, x, y, hor):
 
     return True
 
+#We go along the board, selecting a letter as an anchor for
+#our new word, creating a regular expression pattern to 
+#construct words from our letters and the letters on the board,
+#then check if the word is valid
 def maxPoints2(board,letters, hor):
     f = gfile
     letters2 = list(letters)
@@ -298,6 +316,9 @@ def createBlankBoard():
         board.append(row)
     return board
 
+#This is the main method to be run each time,
+#by taking the board and your letters and
+#returning the best wordscore
 def timeMax(board,letters):
     t0 = time.time()
     print maxPoints2(board,letters,True)
